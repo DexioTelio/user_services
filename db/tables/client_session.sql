@@ -1,7 +1,6 @@
--- Creación de la tabla "User_session"
-CREATE TABLE User_session (
+CREATE TABLE client_session (
     session_id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    user_id BIGINT NOT NULL REFERENCES "Users" (id) ON DELETE CASCADE,
+    client_id BIGINT NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
     token VARCHAR(512) NOT NULL,
     refresh_token VARCHAR(512) NOT NULL,
     active BOOLEAN DEFAULT TRUE,
