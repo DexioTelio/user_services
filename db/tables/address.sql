@@ -1,5 +1,4 @@
--- Creación de la tabla "Address"
-CREATE TABLE "Address" (
+CREATE TABLE address (
     person_id BIGINT NOT NULL REFERENCES "Users" (id) ON DELETE CASCADE,
     street VARCHAR(255) NOT NULL,
     street_number VARCHAR(20) NOT NULL,
