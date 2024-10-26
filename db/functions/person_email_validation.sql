@@ -6,7 +6,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION check_email_uniqueness(new_email TEXT, user_id BIGINT DEFAULT NULL)
-RETURNS BOOLEAN ASS $$
+RETURNS BOOLEAN AS $$
 BEGIN
     RETURN NOT EXISTS (
         SELECT 1
