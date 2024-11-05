@@ -10,6 +10,7 @@ import com.ecommerce.demo.util.Dictionary;
 import io.vavr.control.Either;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class UserValidation {
     // Private constructor to prevent instantiation
@@ -124,10 +125,12 @@ public class UserValidation {
     }
 
     private static boolean isPasswordValid(String password, int min) {
-        return password.length() >= min &&
-                password.matches(".*[a-z].*") &&
-                password.matches(".*[A-Z].*") &&
-                password.matches(".*[0-9].*") &&
-                password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*");
+        Predicate<String> isPasswordValid = p -> p.length() >= min &&
+                p.matches(".*[a-z].*") &&
+                p.matches(".*[A-Z].*") &&
+                p.matches(".*[0-9].*") &&
+                p.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*");
+
+        return isPasswordValid.test(password);
     }
 }
