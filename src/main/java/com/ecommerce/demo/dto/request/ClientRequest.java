@@ -27,5 +27,4 @@ public class ClientRequest {
         this.customerSegment = customerSegment;
         this.lastPurchaseDate = lastPurchaseDate;
     }
-
 }
