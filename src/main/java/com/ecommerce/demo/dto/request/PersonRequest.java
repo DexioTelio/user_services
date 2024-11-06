@@ -1,15 +1,14 @@
-package com.ecommerce.demo.dto;
+package com.ecommerce.demo.dto.request;
 
 import com.ecommerce.demo.enums.Gender;
+import com.ecommerce.demo.enums.PhoneType;
 import com.ecommerce.demo.enums.Role;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 public class PersonRequest {
     @NotBlank(message = "First name is required")
@@ -43,6 +42,12 @@ public class PersonRequest {
     @NotBlank(message = "Terms acceptance is required")
     private final Boolean termsAccepted;
 
+    @NotNull(message = "Address is required")
+    private final Set<AddressRequest> addresses;
+
+    @NotNull(message = "Phones is required")
+    private final Set<PhoneType> phones;
+
     @JsonCreator
     public PersonRequest(
             @JsonProperty("firstName") String firstName,
@@ -53,7 +58,10 @@ public class PersonRequest {
             @JsonProperty("gender") Gender gender,
             @JsonProperty("role") Role role,
             @JsonProperty("profileImageUrl") String profileImageUrl,
-            @JsonProperty("termsAccepted") Boolean termsAccepted) {
+            @JsonProperty("termsAccepted") Boolean termsAccepted,
+            @JsonProperty("address") Set<AddressRequest> addresses,
+            @JsonProperty("phones") Set<PhoneType> phones
+    ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateBirth = dateBirth;
@@ -63,5 +71,7 @@ public class PersonRequest {
         this.role = role;
         this.profileImageUrl = profileImageUrl;
         this.termsAccepted = termsAccepted;
+        this.addresses = addresses;
+        this.phones = phones;
     }
 }
