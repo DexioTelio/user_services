@@ -10,7 +10,7 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Set;
 
-public class PersonRequest {
+public class RegistrationRequest {
     @NotBlank(message = "First name is required")
     @Size(max = 100, message = "First name cannot exceed 50 characters")
     private final String firstName;
@@ -46,10 +46,10 @@ public class PersonRequest {
     private final Set<AddressRequest> addresses;
 
     @NotNull(message = "Phones is required")
-    private final Set<PhoneType> phones;
+    private final Set<PhoneRequest> phones;
 
     @JsonCreator
-    public PersonRequest(
+    public RegistrationRequest(
             @JsonProperty("firstName") String firstName,
             @JsonProperty("lastName") String lastName,
             @JsonProperty("dateBirth") LocalDate dateBirth,
@@ -60,7 +60,7 @@ public class PersonRequest {
             @JsonProperty("profileImageUrl") String profileImageUrl,
             @JsonProperty("termsAccepted") Boolean termsAccepted,
             @JsonProperty("address") Set<AddressRequest> addresses,
-            @JsonProperty("phones") Set<PhoneType> phones
+            @JsonProperty("phones") Set<PhoneRequest> phones
     ) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -74,4 +74,16 @@ public class PersonRequest {
         this.addresses = addresses;
         this.phones = phones;
     }
+
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
+    public LocalDate getDateBirth() { return dateBirth; }
+    public String getEmail() { return email; }
+    public String getPassword() { return password; }
+    public Gender getGender() { return gender; }
+    public Role getRole() { return role; }
+    public String getProfileImageUrl() { return profileImageUrl; }
+    public Boolean getTermsAccepted() { return termsAccepted; }
+    public Set<AddressRequest> getAddresses() { return addresses; }
+    public Set<PhoneRequest> getPhones() { return phones; }
 }
