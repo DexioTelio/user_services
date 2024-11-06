@@ -1,5 +1,5 @@
 CREATE TABLE address (
-    person_id BIGINT NOT NULL REFERENCES "Users" (id) ON DELETE CASCADE,
+    person_id BIGINT NOT NULL REFERENCES person(id) ON DELETE CASCADE,
     street VARCHAR(255) NOT NULL,
     street_number VARCHAR(20) NOT NULL,
     apartment_number VARCHAR(10),
@@ -13,8 +13,8 @@ CREATE TABLE address (
     CONSTRAINT unique_address UNIQUE (street, street_number, city, state, postal_code, country)
 );
 
-CREATE INDEX idx_address_city ON "Address" USING btree (city);
-CREATE INDEX idx_address_state ON "Address" USING btree (state);
-CREATE INDEX idx_address_country ON "Address" USING btree (country);
-CREATE INDEX idx_address ON "Address" USING btree
+CREATE INDEX idx_address_city ON address USING btree (city);
+CREATE INDEX idx_address_state ON address USING btree (state);
+CREATE INDEX idx_address_country ON address USING btree (country);
+CREATE INDEX idx_address ON address USING btree
     (street, street_number, neighborhood, city, state, postal_code, country);

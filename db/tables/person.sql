@@ -1,12 +1,12 @@
 CREATE TYPE gender AS ENUM ('male', 'female', 'other');
 CREATE TYPE role AS ENUM ('client', 'admin', 'manager', 'guest', 'customer support');
-CREATE TYPE account_status AS ENUM ('active', 'inactive', 'suspended', 'pending', 'closed', 'banned')
+CREATE TYPE account_status AS ENUM ('active', 'inactive', 'suspended', 'pending', 'closed', 'banned');
 
 CREATE TABLE person (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
-    date_birth TIMESTAMP NOT NULL,
+    date_birth DATE NOT NULL CHECK (date_birth < CURRENT_DATE - INTERVAL '18 years'),
     email VARCHAR(100) NOT NULL UNIQUE,
     password TEXT NOT NULL,
     gender gender,
