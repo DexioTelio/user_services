@@ -2,7 +2,7 @@ package com.ecommerce.demo.controller;
 
 import com.ecommerce.demo.dto.error.ErrorResponse;
 import com.ecommerce.demo.dto.request.LoginRequest;
-import com.ecommerce.demo.dto.request.RegisterRequest;
+import com.ecommerce.demo.dto.request.RegistrationRequest;
 import com.ecommerce.demo.dto.response.UserResponse;
 import com.ecommerce.demo.services.UserWriteServicesImpl;
 import com.ecommerce.demo.util.Result;
@@ -28,8 +28,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        logger.info("Attempting to register user: {}", request.getUserName());
+    public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
+        logger.info("Attempting to register user: {}", request.firstName() + " " + request.lastName());
 
         // Call the service to create the user and store the response
         Result<UserResponse> response = userWriteServices.registerUser(request);
