@@ -33,9 +33,6 @@ public record RegistrationRequest(
         @NotBlank(message = "Gender is required")
         @JsonProperty("gender") Gender gender,
 
-        @NotBlank(message = "Role is required")
-        @JsonProperty("role") Role role,
-
         @JsonProperty("profile_image_url") String profileImageUrl,
 
         @NotBlank(message = "Terms acceptance is required")
