@@ -2,29 +2,27 @@ package com.ecommerce.demo.model;
 
 import com.ecommerce.demo.enums.AccountStatus;
 import com.ecommerce.demo.enums.Gender;
-import com.ecommerce.demo.enums.Role;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Person {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private LocalDate dateOfBirth;
-    private String email;
-    private String password;
-    private Gender gender;
-    private Role role;
-    private String profileImageUrl;
-    private LocalDateTime lastLogin;
-    private String communicationPreference;
-    private boolean termsAccepted;
-    private AccountStatus accountStatus;
-    private boolean emailVerified;
-    private String bio;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final Long id;
+    private final String firstName;
+    private final String lastName;
+    private final LocalDate dateOfBirth;
+    private final String email;
+    private final String password;
+    private final Gender gender;
+    private final String profileImageUrl;
+    private final LocalDateTime lastLogin;
+    private final String communicationPreference;
+    private final boolean termsAccepted;
+    private final AccountStatus accountStatus;
+    private final boolean emailVerified;
+    private final String bio;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     private Person(Builder builder) {
         this.id = builder.id;
@@ -34,7 +32,6 @@ public class Person {
         this.email = builder.email;
         this.password = builder.password;
         this.gender = builder.gender;
-        this.role = builder.role;
         this.profileImageUrl = builder.profileImageUrl;
         this.lastLogin = builder.lastLogin;
         this.communicationPreference = builder.communicationPreference;
@@ -54,7 +51,6 @@ public class Person {
         private String email;
         private String password;
         private Gender gender;
-        private Role role;
         private String profileImageUrl;
         private LocalDateTime lastLogin;
         private String communicationPreference;
@@ -72,7 +68,6 @@ public class Person {
         public Builder setEmail(String email) { this.email = email; return this; }
         public Builder setPassword(String password) { this.password = password; return this; }
         public Builder setGender(Gender gender) { this.gender = gender; return this; }
-        public Builder setRole(Role role) { this.role = role; return this; }
         public Builder setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; return this; }
         public Builder setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; return this; }
         public Builder setCommunicationPreference(String communicationPreference) { this.communicationPreference = communicationPreference; return this; }
@@ -95,7 +90,6 @@ public class Person {
     public String getEmail() { return email; }
     public String getPassword() { return password; }
     public Gender getGender() { return gender; }
-    public Role getRole() { return role; }
     public String getProfileImageUrl() { return profileImageUrl; }
     public LocalDateTime getLastLogin() { return lastLogin; }
     public String getCommunicationPreference() { return communicationPreference; }
