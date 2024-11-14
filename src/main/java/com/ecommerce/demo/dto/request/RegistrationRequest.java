@@ -41,6 +41,9 @@ public record RegistrationRequest(
         @NotBlank(message = "Terms acceptance is required")
         @JsonProperty("terms_accepted") Boolean termsAccepted,
 
+        @NotEmpty(message = "client is required")
+        @JsonProperty("client") ClientRequest client,
+
         @NotEmpty(message = "Address is required")
         @JsonProperty("addresses") Set<AddressRequest> addresses,
 
