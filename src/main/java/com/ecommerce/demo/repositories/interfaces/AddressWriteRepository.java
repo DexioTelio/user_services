@@ -5,7 +5,6 @@ import com.ecommerce.demo.model.Address;
 import com.ecommerce.demo.util.Result;
 
 public interface AddressWriteRepository {
-    Result<Void> create(Long userId, AddressRequest address);
-    Result<Address> findById(Long id);
+    Result<Void> create(Long personId, AddressRequest address);
     Result<Void> delete(Long id);
 }
