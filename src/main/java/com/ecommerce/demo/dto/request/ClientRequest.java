@@ -10,9 +10,6 @@ import jakarta.validation.constraints.Positive;
 import java.time.ZonedDateTime;
 
 public record ClientRequest(
-        @Positive(message = "Person ID must be a positive value")
-        @JsonProperty("person_id") Long personId,
-
         @Min(value = 0, message = "The loyalty points cannot be negative")
         @JsonProperty("loyalty_points") Integer loyaltyPoints,
 
