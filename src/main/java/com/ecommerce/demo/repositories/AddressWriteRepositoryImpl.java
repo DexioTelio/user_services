@@ -25,13 +25,13 @@ public class AddressWriteRepositoryImpl implements AddressWriteRepository {
     }
 
     @Override
-    public Result<Void> create(Long userId, AddressRequest address) {
-        String sql = "INSERT INTO \"Address\" (user_id, street, street_number, apartment_number, " +
+    public Result<Void> create(Long personId, AddressRequest address) {
+        String sql = "INSERT INTO address (user_id, street, street_number, apartment_number, " +
                 "neighborhood, city, state, postal_code, country, created_at, updated_at) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
         return Try.run(() -> {
-                    jdbcTemplate.update(sql, userId,
+                    jdbcTemplate.update(sql, personId,
                             address.getStreet(),
                             address.getStreetNumber(),
                             address.getApartmentNumber(),
@@ -40,7 +40,7 @@ public class AddressWriteRepositoryImpl implements AddressWriteRepository {
                             address.getState(),
                             address.getPostalCode(),
                             address.getCountry());
-                    logger.info("Dirección insertada exitosamente para el usuario: {}", userId);
+                    logger.info("Dirección insertada exitosamente para el usuario: {}", personId);
                 })
                 .map(Result::success)
                 .getOrElseGet(e -> {
@@ -50,11 +50,6 @@ public class AddressWriteRepositoryImpl implements AddressWriteRepository {
                             DatabaseError.INSERTION_ERROR.getMessage() + ": " +
                                     AddressErrorCode.ADDRESS_ALREADY_EXISTS.getMessage());
                 });
-    }
-
-    @Override
-    public Result<Address> findById(Long id) {
-        return null;
     }
 
     @Override
