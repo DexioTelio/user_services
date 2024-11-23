@@ -13,4 +13,4 @@ CREATE TABLE clients (
 );
 
 CREATE INDEX idx_customer_segment ON clients(customer_segment);
-CREATE INDEX idx_last_purchase_date ON clients(last_purchase_date);
+CREATE INDEX idx_last_purchase_date ON  clients(last_purchase_date);
