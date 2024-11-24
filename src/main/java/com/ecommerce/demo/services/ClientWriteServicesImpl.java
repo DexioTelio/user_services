@@ -68,7 +68,7 @@ public class ClientWriteServicesImpl implements ClientWriteServices {
     Result<Void> clientCreationResult = clientWriteRepository.create(personId, request);
     if (clientCreationResult.isFailure()) {
       logger.error("Error al crear al cliente para person: {}", personId);
-      status.setRollbackOnly(); // Hacer rollback si la creación falla
+      status.setRollbackOnly();
       return Result.failure(ClientErrorCode.CLIENT_CREATION_FAILURE.getMessage() + ": " + String.join(clientCreationResult.getError()));
     }
 
