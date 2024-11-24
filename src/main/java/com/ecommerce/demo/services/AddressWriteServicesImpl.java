@@ -41,7 +41,7 @@ public class AddressWriteServicesImpl implements AddressWriteServices {
 
     // Method to create a new address for a user
     @Override
-    public Result<AddressResponse> create(Long userId, AddressRequest request) {
+    public Result<Void> create(Long personId, AddressRequest request) {
         return transactionTemplate.execute(status -> {
             // Check if the address already exists
             Either<Set<String>, AddressRequest> addressValidation = AddressValidation.validateAddressRequest(request);
@@ -61,7 +61,7 @@ public class AddressWriteServicesImpl implements AddressWriteServices {
             }
 
             // Attempt to create the address in the repository
-            Result<Void> addressCreationResult = addressWriteRepository.create(userId, request);
+            Result<Void> addressCreationResult = addressWriteRepository.create(personId, request);
             if (addressCreationResult.isFailure()) {
                 // Return failure if address creation fails, including any errors
                 status.setRollbackOnly();
@@ -69,9 +69,8 @@ public class AddressWriteServicesImpl implements AddressWriteServices {
                         ": " + String.join(", ", addressCreationResult.getErrors()));
             }
 
-            // Convert the Address entity to an AddressResponse and return success
-            AddressResponse response = AddressResponse.toAddressResponse(request);
-            return Result.success(response);
+            logger.info("address creada para el person: {}", personId);
+            return Result.success();
         });
     }
 
