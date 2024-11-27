@@ -22,7 +22,7 @@ public class AddressQueryRepositoryImpl implements AddressQueryRepository {
 
     @Override
     public Try<Result<Boolean>> exists(AddressRequest addressRequest) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM \"Address\" WHERE " +
+        String sql = "SELECT EXISTS (SELECT 1 FROM address WHERE " +
                 "street = ? AND street_number = ? AND neighborhood = ? " +
                 "AND city = ? AND state = ? AND postal_code = ? AND country = ?)";
 
