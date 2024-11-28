@@ -35,6 +35,6 @@ public class ClientQueryRepositoryImpl implements ClientQueryRepository {
             )
             .map(Result::success)
             .recover(e -> Result.failure(
-                    DatabaseError.QUERY_EXECUTION_ERROR.getMessage() + " " + e.getMessage()));
+                    DatabaseError.QUERY_EXECUTION_ERROR.getMessage() + ": " + e.getMessage()));
   }
 }
