@@ -7,9 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record PhoneRequest(
-    @NotNull(message = "ID is required")
-    @JsonProperty("id") Long id,
-
     @NotNull(message = "Person ID is required")
     @JsonProperty("person_id") Long personId,
 
