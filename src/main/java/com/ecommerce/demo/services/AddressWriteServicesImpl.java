@@ -3,18 +3,18 @@ package com.ecommerce.demo.services;
 import com.ecommerce.demo.dto.request.AddressRequest;
 import com.ecommerce.demo.dto.response.AddressResponse;
 import com.ecommerce.demo.enums.AddressErrorCode;
+import com.ecommerce.demo.model.Address;
 import com.ecommerce.demo.repositories.AddressQueryRepositoryImpl;
 import com.ecommerce.demo.repositories.AddressWriteRepositoryImpl;
 import com.ecommerce.demo.services.interfaces.AddressWriteServices;
 import com.ecommerce.demo.util.Result;
-import com.ecommerce.demo.validation.AddressValidation;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Set;
@@ -44,14 +44,9 @@ public class AddressWriteServicesImpl implements AddressWriteServices {
     public Result<Void> create(Long personId, AddressRequest request) {
         return transactionTemplate.execute(status -> {
             // Check if the address already exists
-            Either<Set<String>, AddressRequest> addressValidation = AddressValidation.validateAddressRequest(request);
-            if (addressValidation.isLeft()) {
-                return Result.failure(addressValidation.getLeft());
-            }
-
             Try<Result<Boolean>> addressExists = addressQueryRepository.exists(request);
             if (addressExists.isFailure()) {
-                return Result.failure(addressExists.getCause().getMessage()); // Return failure if query fails
+                return handleAddressExistenceError(addressExists.getCause());
             }
 
             Result<Boolean> addressExistsResult = addressExists.get();
@@ -61,16 +56,7 @@ public class AddressWriteServicesImpl implements AddressWriteServices {
             }
 
             // Attempt to create the address in the repository
-            Result<Void> addressCreationResult = addressWriteRepository.create(personId, request);
-            if (addressCreationResult.isFailure()) {
-                // Return failure if address creation fails, including any errors
-                status.setRollbackOnly();
-                return Result.failure(AddressErrorCode.ADDRESS_CREATION_FAILURE.getMessage() +
-                        ": " + String.join(", ", addressCreationResult.getErrors()));
-            }
-
-            logger.info("address creada para el person: {}", personId);
-            return Result.success();
+            return createAddress(personId, request, status);
         });
     }
 
@@ -84,5 +70,34 @@ public class AddressWriteServicesImpl implements AddressWriteServices {
     @Override
     public Result<AddressResponse> delete(AddressRequest request) {
         return null; // Placeholder for delete logic
+    }
+
+    private Result<Void> handleAddressExistenceError(Throwable error) {
+        logger.error("Error al verificar la existencia del address");
+        return Result.failure(error.getMessage());
+    }
+
+    private Result<Void> createAddress(long personId, AddressRequest request, TransactionStatus status) {
+            Address address = new Address.Builder()
+                    .personId(personId)
+                    .street(request.street())
+                    .streetNumber(request.streetNumber())
+                    .apartmentNumber(request.apartmentNumber())
+                    .neighborhood(request.neighborhood())
+                    .city(request.city())
+                    .state(request.state())
+                    .postalCode(request.postalCode())
+                    .country(request.country())
+                    .build();
+
+            Result<Void> addressCreationResult = addressWriteRepository.create(address);
+            if (addressCreationResult.isFailure()) {
+                logger.error("Error al crear el address");
+                status.setRollbackOnly();
+                return Result.failure(AddressErrorCode.ADDRESS_CREATION_FAILURE.getMessage() + ": " + String.join(addressCreationResult.getError()));
+        }
+
+        logger.info("address creado con exito");
+        return Result.success();
     }
 }
