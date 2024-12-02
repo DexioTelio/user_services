@@ -1,21 +1,19 @@
 package com.ecommerce.demo.model;
 
-import com.ecommerce.demo.dto.request.AddressRequest;
-
 import java.time.ZonedDateTime;
 
 public class Address {
-    private Long userId;
-    private String street;
-    private String streetNumber;
-    private String apartmentNumber;
-    private String neighborhood;
-    private String city;
-    private String state;
-    private String postalCode;
-    private String country;
-    private ZonedDateTime createdAt;
-    private ZonedDateTime updatedAt;
+    private final Long userId;
+    private final String street;
+    private final String streetNumber;
+    private final String apartmentNumber;
+    private final String neighborhood;
+    private final String city;
+    private final String state;
+    private final String postalCode;
+    private final String country;
+    private final ZonedDateTime createdAt;
+    private final ZonedDateTime updatedAt;
 
     public Address(Builder builder) {
         this.userId = builder.userId;
@@ -59,120 +57,35 @@ public class Address {
         }
     }
 
-    public static Address toAddress(Long userId, AddressRequest request) {
-        return new Builder()
-                .userId(userId)
-                .street(request.getStreet())
-                .streetNumber(request.getStreetNumber())
-                .apartmentNumber(request.getApartmentNumber())
-                .neighborhood(request.getNeighborhood())
-                .city(request.getCity())
-                .state(request.getState())
-                .postalCode(request.getPostalCode())
-                .country(request.getCountry())
-                .build();
-    }
-
     public Long getUserId() {
         return userId;
     }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public String getStreet() {
         return street;
     }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
     public String getStreetNumber() {
         return streetNumber;
     }
-
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
-
     public String getApartmentNumber() {
         return apartmentNumber;
     }
-
-    public void setApartmentNumber(String apartmentNumber) {
-        this.apartmentNumber = apartmentNumber;
-    }
-
     public String getNeighborhood() {
         return neighborhood;
     }
-
-    public void setNeighborhood(String neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
     public String getCity() {
         return city;
     }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public String getState() {
         return state;
     }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
     public String getPostalCode() {
         return postalCode;
     }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
+    public String getCountry() { return country; }
     public ZonedDateTime getCreatedAt() {
         return createdAt;
     }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public ZonedDateTime getUpdatedAt() {
         return updatedAt;
-    }
-
-    public void setUpdatedAt(ZonedDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Address{" +
-                "userId=" + userId +
-                ", street='" + street + '\'' +
-                ", streetNumber='" + streetNumber + '\'' +
-                ", apartmentNumber='" + apartmentNumber + '\'' +
-                ", neighborhood='" + neighborhood + '\'' +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                ", country='" + country + '\'' +
-                '}';
     }
 }
