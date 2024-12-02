@@ -33,7 +33,7 @@ public class PhonesWriteRepositoryImpl implements PhonesWriteRepository {
                 .getOrElseGet(e -> {
                     logger.error("Erro al crear phones");
                     return Result.failure(
-                            DatabaseError.INSERTION_ERROR.getMessage()
+                            DatabaseError.INSERTION_ERROR.getMessage() + ": " + e.getMessage()
                     );
                 });
     }
