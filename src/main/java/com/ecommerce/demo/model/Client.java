@@ -51,4 +51,13 @@ public class Client {
             return new Client(this);
         }
     }
+
+    public Long getId() { return id; }
+    public Long getPersonId() { return personId; }
+    public int getLoyaltyPoints() { return loyaltyPoints; }
+    public PreferredPaymentMethod getPreferredPaymentMethod() { return preferredPaymentMethod; }
+    public CustomerSegment getCustomerSegment() { return customerSegment; }
+    public ZonedDateTime getLastPurchaseDate() { return lastPurchaseDate; }
+    public ZonedDateTime getCreatedAt() { return createdAt; }
+    public ZonedDateTime getUpdatedAt() { return updatedAt; }
 }
