@@ -28,12 +28,12 @@ public class AddressQueryRepositoryImpl implements AddressQueryRepository {
 
         return Try.of(() ->
                         jdbcTemplate.queryForObject(sql, new Object[]{
-                                addressRequest.getStreet(),
-                                addressRequest.getStreetNumber(),
-                                addressRequest.getCity(),
-                                addressRequest.getState(),
-                                addressRequest.getPostalCode(),
-                                addressRequest.getCountry()
+                                addressRequest.street(),
+                                addressRequest.streetNumber(),
+                                addressRequest.city(),
+                                addressRequest.state(),
+                                addressRequest.postalCode(),
+                                addressRequest.country()
                         }, Boolean.class)
                 )
                 .map(result -> result != null && result)
