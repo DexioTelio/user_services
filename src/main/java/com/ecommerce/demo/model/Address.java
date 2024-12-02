@@ -3,7 +3,7 @@ package com.ecommerce.demo.model;
 import java.time.ZonedDateTime;
 
 public class Address {
-    private final Long userId;
+    private final Long personId;
     private final String street;
     private final String streetNumber;
     private final String apartmentNumber;
@@ -12,11 +12,9 @@ public class Address {
     private final String state;
     private final String postalCode;
     private final String country;
-    private final ZonedDateTime createdAt;
-    private final ZonedDateTime updatedAt;
 
     public Address(Builder builder) {
-        this.userId = builder.userId;
+        this.personId = builder.personId;
         this.street = builder.street;
         this.streetNumber = builder.streetNumber;
         this.apartmentNumber = builder.apartmentNumber;
@@ -25,12 +23,10 @@ public class Address {
         this.state = builder.state;
         this.postalCode = builder.postalCode;
         this.country = builder.country;
-        this.createdAt = builder.createdAt;
-        this.updatedAt = builder.updatedAt;
     }
 
     public static class Builder {
-        private Long userId;
+        private Long personId;
         private String street;
         private String streetNumber;
         private String apartmentNumber;
@@ -42,7 +38,7 @@ public class Address {
         private ZonedDateTime createdAt;
         private ZonedDateTime updatedAt;
 
-        public Builder userId(Long userId) { this.userId = userId; return this; }
+        public Builder personId(Long personId) { this.personId = personId; return this; }
         private Builder street(String street) { this.street = street; return this; }
         private Builder streetNumber(String streetNumber) { this.streetNumber = streetNumber; return this; }
         private Builder apartmentNumber(String apartmentNumber) { this.apartmentNumber = apartmentNumber; return this; }
@@ -57,8 +53,8 @@ public class Address {
         }
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getPersonId() {
+        return personId;
     }
     public String getStreet() {
         return street;
@@ -82,10 +78,4 @@ public class Address {
         return postalCode;
     }
     public String getCountry() { return country; }
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-    public ZonedDateTime getUpdatedAt() {
-        return updatedAt;
-    }
 }
