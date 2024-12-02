@@ -25,13 +25,13 @@ public class AddressWriteRepositoryImpl implements AddressWriteRepository {
     }
 
     @Override
-    public Result<Void> create(Long personId, AddressRequest address) {
+    public Result<Void> create(Address address) {
         String sql = "INSERT INTO address (user_id, street, street_number, apartment_number, " +
                 "neighborhood, city, state, postal_code, country, created_at, updated_at) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
         return Try.run(() -> {
-                    jdbcTemplate.update(sql, personId,
+                    jdbcTemplate.update(sql, address.getPersonId(),
                             address.getStreet(),
                             address.getStreetNumber(),
                             address.getApartmentNumber(),
@@ -40,7 +40,7 @@ public class AddressWriteRepositoryImpl implements AddressWriteRepository {
                             address.getState(),
                             address.getPostalCode(),
                             address.getCountry());
-                    logger.info("Dirección insertada exitosamente para el usuario: {}", personId);
+                    logger.info("Dirección insertada exitosamente");
                 })
                 .map(Result::success)
                 .getOrElseGet(e -> {
