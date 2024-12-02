@@ -65,7 +65,7 @@ public class ClientWriteServicesImpl implements ClientWriteServices {
             .lastPurchaseDate(request.lastPurchaseDate())
             .build();
 
-    Result<Void> clientCreationResult = clientWriteRepository.create(personId, request);
+    Result<Void> clientCreationResult = clientWriteRepository.create(client);
     if (clientCreationResult.isFailure()) {
       logger.error("Error al crear al cliente para person: {}", personId);
       status.setRollbackOnly();
