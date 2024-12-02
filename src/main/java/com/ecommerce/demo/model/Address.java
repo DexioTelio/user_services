@@ -39,14 +39,14 @@ public class Address {
         private ZonedDateTime updatedAt;
 
         public Builder personId(Long personId) { this.personId = personId; return this; }
-        private Builder street(String street) { this.street = street; return this; }
-        private Builder streetNumber(String streetNumber) { this.streetNumber = streetNumber; return this; }
-        private Builder apartmentNumber(String apartmentNumber) { this.apartmentNumber = apartmentNumber; return this; }
-        private Builder neighborhood(String neighborhood) { this.neighborhood = neighborhood; return this; }
-        private Builder city(String city) { this.city = city; return this; }
-        private Builder state(String state) { this.state = state; return this; }
-        private Builder postalCode(String postalCode) { this.postalCode = postalCode; return this; }
-        private Builder country(String country) { this.country = country; return this; }
+        public Builder street(String street) { this.street = street; return this; }
+        public Builder streetNumber(String streetNumber) { this.streetNumber = streetNumber; return this; }
+        public Builder apartmentNumber(String apartmentNumber) { this.apartmentNumber = apartmentNumber; return this; }
+        public Builder neighborhood(String neighborhood) { this.neighborhood = neighborhood; return this; }
+        public Builder city(String city) { this.city = city; return this; }
+        public Builder state(String state) { this.state = state; return this; }
+        public Builder postalCode(String postalCode) { this.postalCode = postalCode; return this; }
+        public Builder country(String country) { this.country = country; return this; }
 
         public Address build() {
             return new Address(this);
