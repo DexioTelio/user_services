@@ -30,4 +30,8 @@ public class Phone {
       return new Phone(this);
     }
   }
+  public Long getPhoneId() { return phoneId; }
+  public Long getPersonId() { return personId; }
+  public String getPhoneNumber() { return phoneNumber; }
+  public PhoneType getPhoneType() { return phoneType; }
 }
