@@ -77,7 +77,7 @@ public class AddressWriteServicesImpl implements AddressWriteServices {
         return Result.failure(error.getMessage());
     }
 
-    private Result<Void> createAddress(long personId, AddressRequest request, TransactionStatus status) {
+    private Result<Void> createAddress(Long personId, AddressRequest request, TransactionStatus status) {
             Address address = new Address.Builder()
                     .personId(personId)
                     .street(request.street())
