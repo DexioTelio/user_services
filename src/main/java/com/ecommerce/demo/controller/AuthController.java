@@ -3,8 +3,7 @@ package com.ecommerce.demo.controller;
 import com.ecommerce.demo.dto.error.ErrorResponse;
 import com.ecommerce.demo.dto.request.LoginRequest;
 import com.ecommerce.demo.dto.request.RegistrationRequest;
-import com.ecommerce.demo.dto.response.UserResponse;
-import com.ecommerce.demo.services.UserWriteServicesImpl;
+import com.ecommerce.demo.services.PersonWriteServicesImpl;
 import com.ecommerce.demo.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
-    private final UserWriteServicesImpl userWriteServices;
+    private final PersonWriteServicesImpl personWriteServices;
 
     @Autowired
-    public AuthController(UserWriteServicesImpl userWriteServices) {
-        this.userWriteServices = userWriteServices;
+    public AuthController(PersonWriteServicesImpl personWriteServices) {
+        this.personWriteServices = personWriteServices;
     }
 
     @PostMapping("/register")
@@ -32,7 +31,7 @@ public class AuthController {
         logger.info("Attempting to register user: {}", request.firstName() + " " + request.lastName());
 
         // Call the service to create the user and store the response
-        Result<UserResponse> response = userWriteServices.registerUser(request);
+        Result<Void> response = personWriteServices.registerPerson(request);
 
         // Check if user creation was successful
         if (response.isFailure()) {
