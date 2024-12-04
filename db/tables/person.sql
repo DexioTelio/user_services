@@ -5,7 +5,7 @@ CREATE TABLE person (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
-    date_birth DATE NOT NULL CHECK (date_birth < CURRENT_DATE - INTERVAL '18 years'),
+    date_birth DATE NOT NULL CHECK (date_birth <= CURRENT_DATE - INTERVAL '18 years'),
     email VARCHAR(100) NOT NULL UNIQUE,
     password TEXT NOT NULL,
     gender gender,
