@@ -2,6 +2,7 @@ package com.ecommerce.demo.services;
 
 import com.ecommerce.demo.dto.request.*;
 import com.ecommerce.demo.dto.response.PersonResponse;
+import com.ecommerce.demo.enums.PhonesErrorCode;
 import com.ecommerce.demo.model.Person;
 import com.ecommerce.demo.enums.PersonErrorCode;
 import com.ecommerce.demo.repositories.PersonQueryRepositoryImpl;
@@ -32,6 +33,7 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
   private final AddressWriteServicesImpl addressWriteServices;
   private final BCryptPasswordEncoder passwordEncoder;
   private final TransactionTemplate transactionTemplate;
+  private final PhonesWriteServicesImpl phonesWriteServices;
 
   // Constructor that injects the required repositories and services
   @Autowired
@@ -40,13 +42,15 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
                                  ClientWriteServicesImpl clientWriteServices,
                                  AddressWriteServicesImpl addressWriteServices,
                                  BCryptPasswordEncoder passwordEncoder,
-                                 TransactionTemplate transactionTemplate) {
+                                 TransactionTemplate transactionTemplate,
+                                 PhonesWriteServicesImpl phonesWriteServices) {
     this.personWriteRepository = personWriteRepository;
     this.personQueryRepository = personQueryRepository;
     this.clientWriteServices = clientWriteServices;
     this.addressWriteServices = addressWriteServices;
     this.passwordEncoder = passwordEncoder;
     this.transactionTemplate = transactionTemplate;
+    this.phonesWriteServices = phonesWriteServices;
   }
 
   @Override
@@ -66,30 +70,16 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
       }
 
       // Create a new person from the request
-      Person person = new Person.Builder()
-              .setFirstName(request.firstName())
-              .setLastName(request.lastName())
-              .setDateOfBirth(request.dateBirth())
-              .setEmail(request.email())
-              .setPassword(passwordEncoder.encode(request.password()))
-              .setGender(request.gender())
-              .setProfileImageUrl(request.profileImageUrl())
-              .setTermsAccepted(request.termsAccepted())
-              .build();
-
-      Result<Long> personCreationResult = personWriteRepository.create(person);
-      if (personCreationResult.isFailure()) {
-        logger.error("Error al crear el usuario: {}", personCreationResult.getErrors());
-        status.setRollbackOnly();
-        return Result.failure(PersonErrorCode.PERSON_CREATION_FAILURE.getMessage() + ": "
-                + String.join(", ", personCreationResult.getErrors())); // Return error if person creation fails
+      Result<Long> creationPersonResult = createPerson(request, status);
+      if (creationPersonResult.isFailure()) {
+        return Result.failure(creationPersonResult.getError());
       }
 
-      Long personId = personCreationResult.getValue();
-      logger.info("Person creado con éxito: ID {}", personId);
+      Long personId = creationPersonResult.getValue();
 
       createClientAsync(personId, request.client());
       createAddressAsync(personId, request.addresses(), status);
+      createPhonesAsync(personId, request.phones(), status);
 
 
       logger.info("Proceso de creación de usuario finalizado con éxito: {}");
@@ -105,6 +95,30 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
   @Override
   public Result<PersonResponse> delete(UserRequest request) {
     return null;
+  }
+
+  private Result<Long> createPerson(RegistrationRequest request, TransactionStatus status) {
+    Person person = new Person.Builder()
+            .setFirstName(request.firstName())
+            .setLastName(request.lastName())
+            .setDateOfBirth(request.dateBirth())
+            .setEmail(request.email())
+            .setPassword(passwordEncoder.encode(request.password()))
+            .setGender(request.gender())
+            .setProfileImageUrl(request.profileImageUrl())
+            .setTermsAccepted(request.termsAccepted())
+            .build();
+
+    Result<Long> personCreationResult = personWriteRepository.create(person);
+    if (personCreationResult.isFailure()) {
+      logger.error("Error al crear el usuario: {}", personCreationResult.getErrors());
+      status.setRollbackOnly();
+      return Result.failure(PersonErrorCode.PERSON_CREATION_FAILURE.getMessage() + ": "
+              + String.join(", ", personCreationResult.getErrors())); // Return error if person creation fails
+    }
+
+    logger.info("Person creado con exito");
+    return Result.success(personCreationResult.getValue());
   }
 
   private CompletableFuture<Result<Void>> createClientAsync(Long personId, ClientRequest request) {
@@ -130,7 +144,7 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
               for (CompletableFuture<Result<Void>> future: futures) {
                 Result<Void> result = future.join();
                 if (result.isFailure()) {
-                  logger.error("Erro al crear address");
+                  logger.error("Error al crear address");
                   status.setRollbackOnly();
                   return Result.failure(PersonErrorCode.PERSON_ADDRESS_CREATION_FAILURE.getMessage() + ": "
                           + result.getErrors());
@@ -140,5 +154,25 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
             });
   }
 
-  private CompletableFuture<Result<Void>> createPhonesAsync(Long personId, Set<PhoneRequest> request, TransactionStatus status) {}
+  private CompletableFuture<Result<Void>> createPhonesAsync(Long personId, Set<PhoneRequest> request, TransactionStatus status) {
+    List<CompletableFuture<Result<Void>>> futures = request.stream()
+            .parallel()
+            .map(phoneRequest -> CompletableFuture.supplyAsync(() ->
+                    phonesWriteServices.create(personId, phoneRequest)))
+            .toList();
+
+    return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+            .thenApplyAsync(v -> {
+              for (CompletableFuture<Result<Void>> future: futures) {
+                Result<Void> result = future.join();
+                if (result.isFailure()) {
+                  logger.error("Error al crear phone");
+                  status.setRollbackOnly();
+                  return Result.failure(PhonesErrorCode.PHONES_CREATION_FAILURE.getMessage() + ": "
+                  +result.getErrors());
+                }
+              }
+              return Result.success();
+            });
+  }
 }
