@@ -1,6 +1,5 @@
 package com.ecommerce.demo.repositories;
 
-import com.ecommerce.demo.dto.request.AddressRequest;
 import com.ecommerce.demo.model.Address;
 import com.ecommerce.demo.enums.AddressErrorCode;
 import com.ecommerce.demo.enums.DatabaseError;
@@ -44,7 +43,7 @@ public class AddressWriteRepositoryImpl implements AddressWriteRepository {
                 })
                 .map(Result::success)
                 .getOrElseGet(e -> {
-                    //esto hay que personalizarlo
+                    // esto hay que personalizarlo
                     logger.error("Error al insertar dirección: {}", e.getMessage());
                     return Result.failure(
                             DatabaseError.INSERTION_ERROR.getMessage() + ": " +
