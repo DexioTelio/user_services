@@ -2,7 +2,6 @@ package com.ecommerce.demo.services;
 
 import com.ecommerce.demo.dto.request.*;
 import com.ecommerce.demo.dto.response.PersonResponse;
-import com.ecommerce.demo.enums.PhonesErrorCode;
 import com.ecommerce.demo.model.Person;
 import com.ecommerce.demo.enums.PersonErrorCode;
 import com.ecommerce.demo.repositories.PersonQueryRepositoryImpl;
@@ -21,6 +20,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
 
 // Service implementation for user writing operations
 @Service
@@ -77,10 +77,14 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
 
       Long personId = creationPersonResult.getValue();
 
-      createClientAsync(personId, request.client());
-      createAddressAsync(personId, request.addresses(), status);
-      createPhonesAsync(personId, request.phones(), status);
-
+      CompletableFuture<Result<Void>> clientFuture = createClientAsync(personId, request.client());
+      CompletableFuture<Result<Void>> addressFuture = createAsync(personId, request.addresses(), addressWriteServices::create, status);
+      CompletableFuture<Result<Void>> phonesFuture = createAsync(personId, request.phones(), phonesWriteServices::create, status);
+      // create a new client, address and phone from the request
+      CompletableFuture<Void> resultOperation = CompletableFuture.allOf(clientFuture, addressFuture, phonesFuture)
+                      .thenRun(() -> {
+                        logger.info("Operaciones completadas");
+                      });
 
       logger.info("Proceso de creación de usuario finalizado con éxito: {}");
       return Result.success();
@@ -132,44 +136,19 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
     });
   }
 
-  private CompletableFuture<Result<Void>> createAddressAsync(Long personId, Set<AddressRequest> request, TransactionStatus status) {
-    List<CompletableFuture<Result<Void>>> futures = request.stream()
-            .parallel()
-            .map(addressRequest -> CompletableFuture.supplyAsync(() ->
-                    addressWriteServices.create(personId, addressRequest)))
+  private <T> CompletableFuture<Result<Void>> createAsync(Long personId, Set<T> requests, BiFunction<Long, T, Result<Void>> servicesMethod, TransactionStatus status) {
+    List<CompletableFuture<Result<Void>>> futures = requests.stream()
+            .map(request -> CompletableFuture.supplyAsync(() -> servicesMethod.apply(personId, request)))
             .toList();
 
     return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
             .thenApplyAsync(v -> {
-              for (CompletableFuture<Result<Void>> future: futures) {
+              for (CompletableFuture<Result<Void>> future : futures) {
                 Result<Void> result = future.join();
                 if (result.isFailure()) {
-                  logger.error("Error al crear address");
+                  logger.error("Error en la operación");
                   status.setRollbackOnly();
-                  return Result.failure(PersonErrorCode.PERSON_ADDRESS_CREATION_FAILURE.getMessage() + ": "
-                          + result.getErrors());
-                }
-              }
-              return Result.success();
-            });
-  }
-
-  private CompletableFuture<Result<Void>> createPhonesAsync(Long personId, Set<PhoneRequest> request, TransactionStatus status) {
-    List<CompletableFuture<Result<Void>>> futures = request.stream()
-            .parallel()
-            .map(phoneRequest -> CompletableFuture.supplyAsync(() ->
-                    phonesWriteServices.create(personId, phoneRequest)))
-            .toList();
-
-    return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
-            .thenApplyAsync(v -> {
-              for (CompletableFuture<Result<Void>> future: futures) {
-                Result<Void> result = future.join();
-                if (result.isFailure()) {
-                  logger.error("Error al crear phone");
-                  status.setRollbackOnly();
-                  return Result.failure(PhonesErrorCode.PHONES_CREATION_FAILURE.getMessage() + ": "
-                  +result.getErrors());
+                  return Result.failure("Error en la operación");
                 }
               }
               return Result.success();
