@@ -1,7 +1,7 @@
 CREATE TYPE gender AS ENUM ('male', 'female', 'other');
 CREATE TYPE account_status AS ENUM ('active', 'inactive', 'suspended', 'pending', 'closed', 'banned');
 
-CREATE TABLE person (
+CREATE TABLE persons (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
