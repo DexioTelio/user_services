@@ -2,8 +2,8 @@ package com.ecommerce.demo.controller;
 
 // Import necessary classes for handling requests and responses in the controller
 import com.ecommerce.demo.dto.request.UpdateUser;
-import com.ecommerce.demo.services.UserQueryServicesImpl;
-import com.ecommerce.demo.services.UserWriteServicesImpl;
+import com.ecommerce.demo.services.PersonQueryServicesImpl;
+import com.ecommerce.demo.services.PersonWriteServicesImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.*;
 // Controller responsible for user management
 @RestController
 @RequestMapping("/users") // Define the base path for user-related requests
-public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+public class PersonController {
+    private static final Logger logger = LoggerFactory.getLogger(PersonController.class);
 
     // Service to handle user creation logic
-    private final UserWriteServicesImpl userWriteServices;
-    private final UserQueryServicesImpl userQueryServices;
+    private final PersonWriteServicesImpl personWriteServices;
+    private final PersonQueryServicesImpl personQueryServices;
 
     // Constructor that injects the user write service
     @Autowired
-    public UserController(UserWriteServicesImpl userWriteServices,
-                          UserQueryServicesImpl userQueryServices) {
-        this.userWriteServices = userWriteServices;
-        this.userQueryServices = userQueryServices;
+    public PersonController(PersonWriteServicesImpl personWriteServices,
+                          PersonQueryServicesImpl personQueryServices) {
+        this.personWriteServices = personWriteServices;
+        this.personQueryServices = personQueryServices;
     }
 
     @GetMapping()
