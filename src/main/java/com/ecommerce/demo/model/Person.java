@@ -86,6 +86,7 @@ public class Person {
     public Long getId() { return id; }
     public String getFirstName() { return firstName; }
     public String getLastName() { return lastName; }
+    public String getName() { return firstName + " " + lastName; }
     public LocalDate getDateOfBirth() { return dateOfBirth; }
     public String getEmail() { return email; }
     public String getPassword() { return password; }
