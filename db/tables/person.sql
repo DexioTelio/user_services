@@ -20,8 +20,8 @@ CREATE TABLE persons (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX idx_email ON person(email);
-CREATE INDEX idx_date_birth ON person(date_birth);
-CREATE INDEX idx_gender ON person(gender);
-CREATE INDEX idx_account_status ON person(account_status);
-CREATE INDEX idx_created_at ON person(created_at);
+CREATE INDEX idx_email ON persons(email);
+CREATE INDEX idx_date_birth ON persons(date_birth);
+CREATE INDEX idx_gender ON persons(gender);
+CREATE INDEX idx_account_status ON persons(account_status);
+CREATE INDEX idx_created_at ON persons(created_at);
