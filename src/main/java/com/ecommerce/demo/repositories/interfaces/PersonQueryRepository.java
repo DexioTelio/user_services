@@ -6,7 +6,7 @@ import com.ecommerce.demo.util.Result;
 import io.vavr.control.Try;
 
 public interface PersonQueryRepository {
-  Person findById(Long id);
-  Client findByUsername(String username);
-  Try<Result<Boolean>> exists(String email);
+  Try<Person> findById(Long id);
+  Try<Person> findByUsername(String username);
+  Try<Boolean> exists(String email);
 }
