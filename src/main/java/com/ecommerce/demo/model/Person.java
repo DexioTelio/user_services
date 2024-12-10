@@ -24,7 +24,7 @@ public class Person {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    private Person(Builder builder) {
+    public Person(Builder builder) {
         this.id = builder.id;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
