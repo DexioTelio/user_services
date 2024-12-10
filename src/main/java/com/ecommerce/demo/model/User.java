@@ -1,6 +1,7 @@
 package com.ecommerce.demo.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class User {
   private final Long id;
@@ -12,8 +13,18 @@ public class User {
   private final boolean credentialsNonExpired;
   private final boolean accountNonLocked;
   private final boolean enabled;
+  private final List<String> roles;
 
-  public User(Long id, String fullName, Date dateBirth, String email, String password, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, boolean enabled) {
+  public User(Long id,
+              String fullName,
+              Date dateBirth,
+              String email,
+              String password,
+              boolean accountNonExpired,
+              boolean credentialsNonExpired,
+              boolean accountNonLocked,
+              boolean enabled,
+              List<String> roles) {
     this.id = id;
     this.fullName = fullName;
     this.dateBirth = dateBirth;
@@ -23,6 +34,7 @@ public class User {
     this.credentialsNonExpired = credentialsNonExpired;
     this.accountNonLocked = accountNonLocked;
     this.enabled = enabled;
+    this.roles = roles;
   }
 
   public Long getId() { return id; }
@@ -34,4 +46,5 @@ public class User {
   public boolean isCredentialsNonExpired() { return credentialsNonExpired; }
   public boolean isAccountNonLocked() { return accountNonLocked; }
   public boolean isEnabled() { return enabled; }
+  public List<String> getRoles() { return roles; }
 }
