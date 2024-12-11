@@ -2,12 +2,11 @@ package com.ecommerce.demo.services;
 
 
 import com.ecommerce.demo.dto.request.LoginRequest;
-import com.ecommerce.demo.dto.request.RegisterRequest;
-import com.ecommerce.demo.dto.request.UserRequest;
-import com.ecommerce.demo.dto.response.UserResponse;
+import com.ecommerce.demo.dto.request.RegistrationRequest;
+import com.ecommerce.demo.dto.response.PersonResponse;
 import com.ecommerce.demo.jwt.JwtTokenServices;
-import com.ecommerce.demo.repositories.UserWriteRepositoryImpl;
-import com.ecommerce.demo.repositories.interfaces.UserQueryRepository;
+import com.ecommerce.demo.repositories.PersonWriteRepositoryImpl;
+import com.ecommerce.demo.repositories.interfaces.PersonQueryRepository;
 import com.ecommerce.demo.services.interfaces.AuthServices;
 import io.vavr.control.Either;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +19,16 @@ import org.springframework.stereotype.Service;
 public class AuthServicesImpl implements AuthServices  {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenServices jwtTokenServices;
-    private final UserWriteRepositoryImpl userWriteRepository;
-    private final UserQueryRepository userQueryRepository;
+    private final PersonWriteRepositoryImpl personWriteRepository;
+    private final PersonQueryRepository personQueryRepository;
 
     @Autowired
-    public AuthServicesImpl(UserWriteRepositoryImpl userWriteRepository,
-                            UserQueryRepository userQueryRepository,
+    public AuthServicesImpl(PersonWriteRepositoryImpl personWriteRepository,
+                            PersonQueryRepository personQueryRepository,
                             AuthenticationManager authenticationManager,
                             JwtTokenServices jwtTokenServices) {
-        this.userWriteRepository = userWriteRepository;
-        this.userQueryRepository = userQueryRepository;
+        this.personWriteRepository = personWriteRepository;
+        this.personQueryRepository = personQueryRepository;
         this.authenticationManager = authenticationManager;
         this.jwtTokenServices = jwtTokenServices;
     }
@@ -51,7 +50,7 @@ public class AuthServicesImpl implements AuthServices  {
     }
 
     @Override
-    public Either<String, UserResponse> register(RegisterRequest request) {
+    public Either<String, PersonResponse> register(RegistrationRequest request) {
         return null;
     }
 
