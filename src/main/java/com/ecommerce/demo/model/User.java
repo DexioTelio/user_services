@@ -1,9 +1,14 @@
 package com.ecommerce.demo.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class User {
+public class User implements UserDetails  {
   private final Long id;
   private final String fullName;
   private final Date dateBirth;
@@ -13,7 +18,7 @@ public class User {
   private final boolean credentialsNonExpired;
   private final boolean accountNonLocked;
   private final boolean enabled;
-  private final List<String> roles;
+  private final List<SimpleGrantedAuthority> authorities;
 
   public User(Long id,
               String fullName,
@@ -24,7 +29,7 @@ public class User {
               boolean credentialsNonExpired,
               boolean accountNonLocked,
               boolean enabled,
-              List<String> roles) {
+              List<SimpleGrantedAuthority> authorities) {
     this.id = id;
     this.fullName = fullName;
     this.dateBirth = dateBirth;
@@ -34,7 +39,7 @@ public class User {
     this.credentialsNonExpired = credentialsNonExpired;
     this.accountNonLocked = accountNonLocked;
     this.enabled = enabled;
-    this.roles = roles;
+    this.authorities = authorities;
   }
 
   public Long getId() { return id; }
@@ -46,5 +51,11 @@ public class User {
   public boolean isCredentialsNonExpired() { return credentialsNonExpired; }
   public boolean isAccountNonLocked() { return accountNonLocked; }
   public boolean isEnabled() { return enabled; }
-  public List<String> getRoles() { return roles; }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; }
+  @Override
+  public String getUsername() { return fullName; }
+
+
 }
