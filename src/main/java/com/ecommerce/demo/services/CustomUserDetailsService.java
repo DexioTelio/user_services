@@ -1,45 +1,41 @@
 package com.ecommerce.demo.services;
 
-import com.ecommerce.demo.model.MainUserDetails;
-import com.ecommerce.demo.repositories.UserWriteRepositoryImpl;
-import com.ecommerce.demo.repositories.interfaces.UserQueryRepository;
-import io.vavr.control.Try;
+import com.ecommerce.demo.model.User;
+import com.ecommerce.demo.repositories.PersonQueryRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.Optional;
+
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserWriteRepositoryImpl userWriteRepository;
-    private final UserQueryRepository userQueryRepository;
+  private final PersonQueryRepositoryImpl personQueryRepository;
 
-    @Autowired
-    public CustomUserDetailsService(UserWriteRepositoryImpl userWriteRepository,
-                                    UserQueryRepository userQueryRepository) {
-        this.userWriteRepository = userWriteRepository;
-        this.userQueryRepository = userQueryRepository;
-    }
+  @Autowired
+  public CustomUserDetailsService(PersonQueryRepositoryImpl personQueryRepository) {
+    this.personQueryRepository = personQueryRepository;
+  }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        return userQueryRepository.findByUsername(username)
-                .flatMap(result -> {
-                    if (result.isSuccess()) {
-                        return Try.success(new MainUserDetails(result.getValue()));
-                    } else {
-                        return Try.failure(new UsernameNotFoundException(result.getError()));
-                    }
-                })
-                .recover(e -> {
-                    if (e instanceof UsernameNotFoundException) {
-                        throw (UsernameNotFoundException) e;
-                    }
-                    throw new RuntimeException("Unexpected error: " + e.getMessage());
-                })
-                .get();
+    public UserDetails loadUserByUsername(String email) {
+      Optional<User> userOptional = personQueryRepository.findByEmail(email);
+      return userOptional
+              .map(u -> new User(
+                      u.getId(),
+                      u.getFullName(),
+                      u.getDateBirth(),
+                      u.getEmail(),
+                      u.getPassword(),
+                      u.isAccountNonExpired(),
+                      u.isCredentialsNonExpired(),
+                      u.isAccountNonLocked(),
+                      u.isEnabled(),
+                      personQueryRepository.getAuthorities(u.getEmail())
+              ))
+              .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 }
