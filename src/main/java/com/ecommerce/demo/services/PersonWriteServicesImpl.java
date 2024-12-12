@@ -9,6 +9,7 @@ import com.ecommerce.demo.repositories.PersonQueryRepositoryImpl;
 import com.ecommerce.demo.repositories.PersonWriteRepositoryImpl;
 import com.ecommerce.demo.services.interfaces.PersonWriteServices;
 import com.ecommerce.demo.util.Result;
+import io.vavr.control.Either;
 import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,12 +72,13 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
       }
 
       // Create a new person from the request
-      Result<Long> creationPersonResult = createPerson(request, status);
-      if (creationPersonResult.isFailure()) {
-        return Result.failure(creationPersonResult.getError());
+      Either<String, Long> creationPersonResult = createPerson(request, status);
+      if (creationPersonResult.isLeft()) {
+        return Result.failure(creationPersonResult.getLeft());
       }
+
       logger.info("creacion de person exitosa");
-      Long personId = creationPersonResult.getValue();
+      Long personId = creationPersonResult.get();
 
       CompletableFuture<Result<Void>> clientFuture = createClientAsync(personId, request.client());
       CompletableFuture<Result<Void>> addressFuture = createAsync(personId, request.addresses(), addressWriteServices::create, status);
@@ -102,7 +104,7 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
     return null;
   }
 
-  private Result<Long> createPerson(RegistrationRequest request, TransactionStatus status) {
+  private Either<String, Long> createPerson(RegistrationRequest request, TransactionStatus status) {
     Person person = new Person.Builder()
             .setFirstName(request.firstName())
             .setLastName(request.lastName())
@@ -114,16 +116,15 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
             .setTermsAccepted(request.termsAccepted())
             .build();
 
-    Result<Long> personCreationResult = personWriteRepository.create(person);
+    Try<Long> personCreationResult = personWriteRepository.create(person);
     if (personCreationResult.isFailure()) {
-      logger.error("Error al crear el usuario: {}", personCreationResult.getErrors());
+      logger.error("Error al crear el usuario: {}", person.getFirstName() + " " + person.getLastName());
       status.setRollbackOnly();
-      return Result.failure(PersonErrorCode.PERSON_CREATION_FAILURE.getMessage() + ": "
-              + String.join(", ", personCreationResult.getErrors())); // Return error if person creation fails
+      return Either.left(PersonErrorCode.PERSON_CREATION_FAILURE.getMessage() + ": " + personCreationResult.getCause().getMessage()); // Return error if person creation fails
     }
 
     logger.info("Person creado con exito");
-    return Result.success(personCreationResult.getValue());
+    return Either.right(personCreationResult.get());
   }
 
   private CompletableFuture<Result<Void>> createClientAsync(Long personId, ClientRequest request) {
