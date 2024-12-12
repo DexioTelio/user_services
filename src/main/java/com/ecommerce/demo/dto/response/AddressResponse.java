@@ -1,6 +1,5 @@
 package com.ecommerce.demo.dto.response;
 
-import com.ecommerce.demo.dto.request.AddressRequest;
 
 public class AddressResponse {
     private final String street;
@@ -47,48 +46,27 @@ public class AddressResponse {
         }
     }
 
-    public static AddressResponse toAddressResponse(AddressRequest address) {
-        return new Builder()
-                .street(address.getStreet())
-                .streetNumber(address.getStreetNumber())
-                .apartmentNumber(address.getApartmentNumber())
-                .neighborhood(address.getNeighborhood())
-                .city(address.getCity())
-                .state(address.getState())
-                .postalCode(address.getPostalCode())
-                .country(address.getCountry())
-                .build();
-
-    }
-
     public String getStreet() {
         return street;
     }
-
     public String getStreetNumber() {
         return streetNumber;
     }
-
     public String getApartmentNumber() {
         return apartmentNumber;
     }
-
     public String getNeighborhood() {
         return neighborhood;
     }
-
     public String getCity() {
         return city;
     }
-
     public String getState() {
         return state;
     }
-
     public String getPostalCode() {
         return postalCode;
     }
-
     public String getCountry() {
         return country;
     }
