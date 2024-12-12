@@ -2,6 +2,7 @@ package com.ecommerce.demo.services;
 
 import com.ecommerce.demo.dto.request.*;
 import com.ecommerce.demo.dto.response.PersonResponse;
+import com.ecommerce.demo.enums.DatabaseError;
 import com.ecommerce.demo.model.Person;
 import com.ecommerce.demo.enums.PersonErrorCode;
 import com.ecommerce.demo.repositories.PersonQueryRepositoryImpl;
@@ -57,14 +58,14 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
   public Result<Void> registerPerson(RegistrationRequest request) {
     return transactionTemplate.execute(status -> {
       // Check if the person already exists based on the email
-      Try<Result<Boolean>> personExists = personQueryRepository.exists(request.email());
+      Try<Boolean> personExists = personQueryRepository.exists(request.email());
       if (personExists.isFailure()) {
-        logger.error("Error al verificar la existencia del usuario: {}", personExists.getCause().getMessage());
-        return Result.failure(personExists.getCause().getMessage()); // Handle failure in querying
+        logger.error("Error al verificar la existencia de la persona: {}", request.email());
+        return Result.failure(DatabaseError.QUERY_EXECUTION_ERROR.getMessage() + ": " + personExists.getCause().getMessage()); // Handle failure in querying
       }
 
-      Result<Boolean> personExistsResult = personExists.get();
-      if (personExistsResult.isSuccess() && Boolean.TRUE.equals(personExistsResult.getValue())) {
+      Boolean personExistsResult = personExists.get();
+      if (Boolean.TRUE.equals(personExistsResult)) {
         logger.warn("El usuario ya existe: {}", request.email());
         return Result.failure(PersonErrorCode.PERSON_ALREADY_EXISTS.getMessage()); // Return error if person exists
       }
@@ -74,7 +75,7 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
       if (creationPersonResult.isFailure()) {
         return Result.failure(creationPersonResult.getError());
       }
-
+      logger.info("creacion de person exitosa");
       Long personId = creationPersonResult.getValue();
 
       CompletableFuture<Result<Void>> clientFuture = createClientAsync(personId, request.client());
@@ -86,7 +87,7 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
                         logger.info("Operaciones completadas");
                       });
 
-      logger.info("Proceso de creación de usuario finalizado con éxito: {}");
+      logger.info("Proceso de creación del cliente finalizado con éxito: {}");
       return Result.success();
     });
   }
