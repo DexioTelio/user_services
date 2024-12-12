@@ -5,9 +5,11 @@ import com.ecommerce.demo.util.Result;
 import io.vavr.control.Try;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public class PhonesQueryRepositoryImpl {
   private final JdbcTemplate jdbcTemplate;
 
