@@ -42,9 +42,9 @@ public class PersonQueryRepositoryImpl implements PersonQueryRepository {
     }
 
     public Optional<User> findByEmail(String email) {
-        String sql = "SELECT id, first_name || ' ' || last_name AS full_name, date_birth, email, password, " +
+        String sql = "SELECT id, CONCAT(first_name, ' ', last_name) AS full_name, date_birth, email, password, " +
                 "account_non_expired, credentials_non_expired, account_non_locked, enabled " +
-                "FROM persons WHERE first_name || ' ' || last_name = ?";
+                "FROM persons WHERE email = ?";
 
         return Optional.of(jdbcTemplate.queryForObject(sql, User.class, personRowMapper(email)));
     }
