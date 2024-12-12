@@ -2,6 +2,7 @@ package com.ecommerce.demo.services;
 
 import com.ecommerce.demo.dto.request.ClientRequest;
 import com.ecommerce.demo.enums.ClientErrorCode;
+import com.ecommerce.demo.enums.DatabaseError;
 import com.ecommerce.demo.model.Client;
 import com.ecommerce.demo.repositories.ClientQueryRepositoryImpl;
 import com.ecommerce.demo.repositories.ClientWriteRepositoryImpl;
@@ -36,13 +37,13 @@ public class ClientWriteServicesImpl implements ClientWriteServices {
   public Result<Void> create(Long personId, ClientRequest request) {
     return transactionTemplate.execute(status -> {
       // Check if the client already exists based on the id
-      Try<Result<Boolean>> clientExists = clientQueryRepository.exists(personId);
+      Try<Boolean> clientExists = clientQueryRepository.exists(personId);
       if (clientExists.isFailure()) {
         return handleClientExistenceError(clientExists.getCause());
       }
 
-      Result<Boolean> clientExistsResult = clientExists.get();
-      if (clientExistsResult.isFailure() && Boolean.TRUE.equals(clientExistsResult.getValue())) {
+      Boolean clientExistsResult = clientExists.get();
+      if (Boolean.TRUE.equals(clientExistsResult)) {
         logger.error("El cliente ya existe: {}", personId);
         return Result.failure(ClientErrorCode.CLIENT_ALREADY_EXISTS.getMessage());
       }
@@ -53,7 +54,7 @@ public class ClientWriteServicesImpl implements ClientWriteServices {
 
   private Result<Void> handleClientExistenceError(Throwable error) {
     logger.error("Error al verificar la existencia del cliente: {}", error.getMessage());
-    return Result.failure(error.getMessage());
+    return Result.failure(DatabaseError.QUERY_EXECUTION_ERROR.getMessage() + error.getMessage());
   }
 
   private Result<Void> createClient(Long personId, ClientRequest request, TransactionStatus status) {
