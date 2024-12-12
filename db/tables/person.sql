@@ -2,7 +2,7 @@ CREATE TYPE gender AS ENUM ('male', 'female', 'other');
 CREATE TYPE account_status AS ENUM ('active', 'inactive', 'suspended', 'pending', 'closed', 'banned');
 
 CREATE TABLE persons (
-    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    person_id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     date_birth DATE NOT NULL CHECK (date_birth <= CURRENT_DATE - INTERVAL '18 years'),
