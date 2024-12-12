@@ -2,7 +2,7 @@ CREATE TYPE payment_method AS ENUM ('credit_card', 'debit_card', 'paypal', 'bank
 CREATE TYPE customer_segment AS ENUM ('VIP', 'frequent', 'occasional', 'new');
 
 CREATE TABLE clients (
-    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    client_id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     person_id BIGINT REFERENCES persons(id) ON DELETE CASCADE,
     loyalty_points INT NOT NULL CHECK (loyalty_points >= 0),
     preferred_payment_method payment_method,
