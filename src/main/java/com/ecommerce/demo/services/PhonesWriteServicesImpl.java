@@ -10,9 +10,11 @@ import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionTemplate;
 
+@Repository
 public class PhonesWriteServicesImpl {
     private final Logger logger = LoggerFactory.getLogger(PhonesWriteServicesImpl.class);
 
