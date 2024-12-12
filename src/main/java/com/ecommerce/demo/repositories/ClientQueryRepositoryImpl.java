@@ -23,6 +23,6 @@ public class ClientQueryRepositoryImpl implements ClientQueryRepository {
   public Try<Boolean> exists(Long personId) {
     String sql = " SELECT EXISTS (SELECT 1 FROM clients WHERE personId = ?";
 
-    return Try.of(() -> jdbcTemplate.queryForObject(sql, new Object[]{personId}, Boolean.class));
+    return Try.of(() -> jdbcTemplate.queryForObject(sql, Boolean.class, personId));
   }
 }
