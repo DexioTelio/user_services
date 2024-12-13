@@ -36,18 +36,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(req ->
-                        req.requestMatchers("/auth/register", "/auth/login")
-                                .permitAll()
-                                .anyRequest().authenticated()
+        return http.authorizeHttpRequests(req ->
+                req.requestMatchers("/auth/register", "/auth/login")
+                        .permitAll()
+                        .anyRequest().authenticated()
                 )
                 .csrf(c -> c.ignoringRequestMatchers("/auth/register"))
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
