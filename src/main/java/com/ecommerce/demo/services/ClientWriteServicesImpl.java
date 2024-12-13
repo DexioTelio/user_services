@@ -12,6 +12,7 @@ import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -50,6 +51,10 @@ public class ClientWriteServicesImpl implements ClientWriteServices {
 
       return createClient(personId, request, status);
     });
+  }
+
+  @Secured({"USER", "ADMIN"})
+  public void update(Client client) {
   }
 
   private Result<Void> handleClientExistenceError(Throwable error) {
