@@ -24,7 +24,7 @@ public class PersonWriteRepositoryImpl implements PersonWriteRepository {
 
     @Override
     public Try<Long> create(Person person) {
-        String sql = "INSERT INTO person (first_name, last_name, date_birth, email, password, " +
+        String sql = "INSERT INTO persons (first_name, last_name, date_birth, email, password, " +
                 "gender, profile_image_url, terms_accepted,) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
 
