@@ -26,7 +26,7 @@ public class PersonWriteRepositoryImpl implements PersonWriteRepository {
     public Try<Long> create(Person person) {
         String sql = "INSERT INTO persons (first_name, last_name, date_birth, email, password, " +
                 "gender, profile_image_url, terms_accepted) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id;";
 
         // Attempt to insert a new person into the database
         // Execute the query and retrieve the generated user ID
