@@ -4,13 +4,12 @@ import com.ecommerce.demo.enums.AccountStatus;
 import com.ecommerce.demo.enums.Gender;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 
 public class Person {
     private final Long id;
     private final String firstName;
     private final String lastName;
-    private final OffsetDateTime dateOfBirth;
+    private final LocalDateTime dateOfBirth;
     private final String email;
     private final String password;
     private final Gender gender;
@@ -47,7 +46,7 @@ public class Person {
         private Long id;
         private String firstName;
         private String lastName;
-        private OffsetDateTime dateOfBirth;
+        private LocalDateTime dateOfBirth;
         private String email;
         private String password;
         private Gender gender;
@@ -64,7 +63,7 @@ public class Person {
         public Builder setId(Long id) { this.id = id; return this; }
         public Builder setFirstName(String firstName) { this.firstName = firstName; return this; }
         public Builder setLastName(String lastName) { this.lastName = lastName; return this; }
-        public Builder setDateOfBirth(OffsetDateTime dateOfBirth) { this.dateOfBirth = dateOfBirth; return this; }
+        public Builder setDateOfBirth(LocalDateTime dateOfBirth) { this.dateOfBirth = dateOfBirth; return this; }
         public Builder setEmail(String email) { this.email = email; return this; }
         public Builder setPassword(String password) { this.password = password; return this; }
         public Builder setGender(Gender gender) { this.gender = gender; return this; }
@@ -86,7 +85,7 @@ public class Person {
     public Long getId() { return id; }
     public String getFirstName() { return firstName; }
     public String getLastName() { return lastName; }
-    public OffsetDateTime getDateOfBirth() { return dateOfBirth; }
+    public LocalDateTime getDateOfBirth() { return dateOfBirth; }
     public String getEmail() { return email; }
     public String getPassword() { return password; }
     public Gender getGender() { return gender; }
