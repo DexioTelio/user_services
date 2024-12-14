@@ -5,7 +5,7 @@ import com.ecommerce.demo.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 public record RegistrationRequest(
@@ -19,7 +19,7 @@ public record RegistrationRequest(
 
         @NotNull(message = "Date of birth is required")
         @MinAge(value = 18, message = "You must be at least 18 years old")
-        @JsonProperty("date_birth") LocalDateTime dateBirth,
+        @JsonProperty("date_birth") LocalDate dateBirth,
 
         @NotBlank(message = "Email is required")
         @Email(message = "Invalid email format")
