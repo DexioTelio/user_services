@@ -1,6 +1,6 @@
 CREATE TABLE address (
     address_id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    person_id BIGINT NOT NULL REFERENCES person(id) ON DELETE CASCADE,
+    person_id BIGINT NOT NULL REFERENCES persons(person_id) ON DELETE CASCADE,
     street VARCHAR(255) NOT NULL,
     street_number VARCHAR(20) NOT NULL,
     apartment_number VARCHAR(10),
@@ -9,8 +9,8 @@ CREATE TABLE address (
     state VARCHAR(100) NOT NULL,
     postal_code VARCHAR(20) NOT NULL,
     country VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
     CONSTRAINT unique_address UNIQUE (street, street_number, city, state, postal_code, country)
 );
 
