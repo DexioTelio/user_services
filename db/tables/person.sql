@@ -16,12 +16,12 @@ CREATE TABLE persons (
     account_non_locked BOOLEAN DEFAULT TRUE,
     enable BOOLEAN DEFAULT TRUE,
     communication_preference VARCHAR(20),
-    terms_accepted BOOLEAN DEFAULT FALSE,
+    terms_accepted BOOLEAN DEFAULT FALSE NOT NULL,
     account_status account_status DEFAULT 'pending',
     email_verified BOOLEAN DEFAULT FALSE,
     bio TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE INDEX idx_email ON persons(email);
