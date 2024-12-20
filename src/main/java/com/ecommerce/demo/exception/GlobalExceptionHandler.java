@@ -28,12 +28,16 @@ public class GlobalExceptionHandler {
         String providedValue = extractProvidedValue(errorMessage);
         Set<String> acceptedRoles = Set.of("CLIENT", "ADMIN", "VISITOR");
         Set<String> acceptedGenders = Set.of("MALE", "FEMALE", "OTHER");
+        Set<String> acceptedPhoneTypes = Set.of("MOBILE", "FIXED", "WORK", "EMERGENCY");
 
         if (errorMessage.contains("Role")) {
             return createErrorResponse("INVALID_ROLE", providedValue, acceptedRoles);
         } else if (errorMessage.contains("Gender")) {
             return createErrorResponse("INVALID_GENDER", providedValue, acceptedGenders);
+        } else if (errorMessage.contains("phone_type")) {
+            return createErrorResponse("INVALID_PHONE_TYPE", providedValue, acceptedPhoneTypes);
         }
+
 
         // respuesta genérica
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
