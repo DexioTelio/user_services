@@ -22,8 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-      Optional<User> userOptional = personQueryRepository.findByEmail(email);
-      return userOptional
+      return personQueryRepository.findByEmail(email)
               .map(u -> new User(
                       u.getId(),
                       u.getFullName(),
