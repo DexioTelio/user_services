@@ -39,7 +39,7 @@ public class AuthServicesImpl implements AuthServices  {
                         new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
         if (authentication.isAuthenticated()) {
-            return Either.right(jwtTokenServices.generateToken(request));
+            return Either.right(jwtTokenServices.generateToken(authentication));
         }
         return null;
     }
