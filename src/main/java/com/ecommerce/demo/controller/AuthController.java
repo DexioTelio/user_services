@@ -3,6 +3,7 @@ package com.ecommerce.demo.controller;
 import com.ecommerce.demo.dto.error.ErrorResponse;
 import com.ecommerce.demo.dto.request.LoginRequest;
 import com.ecommerce.demo.dto.request.RegistrationRequest;
+import com.ecommerce.demo.jwt.JwtTokenServices;
 import com.ecommerce.demo.services.PersonWriteServicesImpl;
 import com.ecommerce.demo.util.Result;
 import org.slf4j.Logger;
@@ -10,20 +11,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/auth")
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final PersonWriteServicesImpl personWriteServices;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenServices jwtTokenServices;
+
 
     @Autowired
-    public AuthController(PersonWriteServicesImpl personWriteServices) {
+    public AuthController(PersonWriteServicesImpl personWriteServices,
+                          AuthenticationManager authenticationManager,
+                          JwtTokenServices jwtTokenServices) {
         this.personWriteServices = personWriteServices;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenServices = jwtTokenServices;
     }
 
     @PostMapping("/register")
@@ -49,7 +59,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok("bien");
+        logger.info("Attempting to login user: {}", request.getEmail());
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtTokenServices.generateToken(authentication);
+        return ResponseEntity.ok(jwt);
     }
 
     @PostMapping("/logout")
