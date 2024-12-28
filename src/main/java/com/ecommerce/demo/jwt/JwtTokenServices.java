@@ -1,10 +1,11 @@
 package com.ecommerce.demo.jwt;
 
-import com.ecommerce.demo.dto.request.LoginRequest;
-import com.ecommerce.demo.enums.Role;
+import com.ecommerce.demo.model.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ import java.util.function.Function;
 public class JwtTokenServices {
     @Value("${JWT_SECRET_KEY}")
     private final String SECRET_KEY;
-    private final long EXPIRATION_TIME = 900000;
+    @Value("${jwt.expiration-time}")
+    private long EXPIRATION_TIME;
 
     public JwtTokenServices(@Value("${JWT_SECRET_KEY}") String secretKey) {
         if (secretKey == null || secretKey.isEmpty()) {
@@ -27,18 +29,28 @@ public class JwtTokenServices {
         this.SECRET_KEY = secretKey;
     }
 
-    public String generateToken(LoginRequest request) {
+    public String generateToken(Authentication authentication) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", List.of(request.getRoles().stream().map(Role::getValue).toArray()));
-        claims.put("email", request.getEmail());
-        claims.put("phone", request.getPhones().stream().findFirst().orElse(null));
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails userDetails) {
+            claims.put("roles", userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList());
+            claims.put("username", userDetails.getUsername());
+        }
+
+        if (principal instanceof CustomUserDetails customUserDetails) {
+            claims.put("email", customUserDetails.getEmail());
+        }
+
         Date now = new Date(System.currentTimeMillis());
         Date expiration = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
 
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(request.getUsername())
+                .subject(authentication.getName())
                 .issuer("http://eco.local")
                 .issuedAt(now)
                 .expiration(expiration)
