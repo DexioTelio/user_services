@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class User implements UserDetails  {
+public class CustomUserDetails implements UserDetails  {
   private final Long id;
   private final String fullName;
   private final Date dateBirth;
@@ -20,7 +20,7 @@ public class User implements UserDetails  {
   private final boolean enabled;
   private final List<SimpleGrantedAuthority> authorities;
 
-  public User(Long id,
+  public CustomUserDetails(Long id,
               String fullName,
               Date dateBirth,
               String email,
