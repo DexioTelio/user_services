@@ -70,6 +70,7 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
         logger.warn("El usuario ya existe: {}", request.email());
         return Result.failure(PersonErrorCode.PERSON_ALREADY_EXISTS.getMessage()); // Return error if person exists
       }
+      logger.info("el usuario no está en la base de datos");
 
       // Create a new person from the request
       Either<String, Long> creationPersonResult = createPerson(request, status);
@@ -80,14 +81,14 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
       logger.info("creacion de person exitosa");
       Long personId = creationPersonResult.get();
 
-      CompletableFuture<Result<Void>> clientFuture = createClientAsync(personId, request.client());
-      CompletableFuture<Result<Void>> addressFuture = createAsync(personId, request.addresses(), addressWriteServices::create, status);
-      CompletableFuture<Result<Void>> phonesFuture = createAsync(personId, request.phones(), phonesWriteServices::create, status);
+//      CompletableFuture<Result<Void>> clientFuture = createClientAsync(personId, request.client());
+//      CompletableFuture<Result<Void>> addressFuture = createAsync(personId, request.addresses(), addressWriteServices::create, status);
+//      CompletableFuture<Result<Void>> phonesFuture = createAsync(personId, request.phones(), phonesWriteServices::create, status);
       // create a new client, address and phone from the request
-      CompletableFuture<Void> resultOperation = CompletableFuture.allOf(clientFuture, addressFuture, phonesFuture)
-                      .thenRun(() -> {
-                        logger.info("Operaciones completadas");
-                      });
+//      CompletableFuture<Void> resultOperation = CompletableFuture.allOf(clientFuture, addressFuture, phonesFuture)
+//                      .thenRun(() -> {
+//                        logger.info("Operaciones completadas");
+//                      });
 
       logger.info("Proceso de creación del cliente finalizado con éxito: {}");
       return Result.success();
@@ -104,11 +105,11 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
     return null;
   }
 
-  private Either<String, Long> createPerson(RegistrationRequest request, TransactionStatus status) {
+  public Either<String, Long> createPerson(RegistrationRequest request, TransactionStatus status) {
     Person person = new Person.Builder()
             .setFirstName(request.firstName())
             .setLastName(request.lastName())
-            .setDateOfBirth(request.dateBirth())
+            .setDateBirth(request.dateBirth())
             .setEmail(request.email())
             .setPassword(passwordEncoder.encode(request.password()))
             .setGender(request.gender())
@@ -118,7 +119,7 @@ public class PersonWriteServicesImpl implements PersonWriteServices {
 
     Try<Long> personCreationResult = personWriteRepository.create(person);
     if (personCreationResult.isFailure()) {
-      logger.error("Error al crear el usuario: {}", person.getFirstName() + " " + person.getLastName());
+      logger.error("Error al crear el usuario: {}, {}", person.getFirstName() + " " + person.getLastName(), personCreationResult.getCause().getMessage());
       status.setRollbackOnly();
       return Either.left(PersonErrorCode.PERSON_CREATION_FAILURE.getMessage() + ": " + personCreationResult.getCause().getMessage()); // Return error if person creation fails
     }
