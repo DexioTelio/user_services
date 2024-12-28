@@ -1,6 +1,6 @@
 package com.ecommerce.demo.services;
 
-import com.ecommerce.demo.model.User;
+import com.ecommerce.demo.model.CustomUserDetails;
 import com.ecommerce.demo.repositories.PersonQueryRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) {
       return personQueryRepository.findByEmail(email)
-              .map(u -> new User(
+              .map(u -> new CustomUserDetails(
                       u.getId(),
                       u.getFullName(),
                       u.getDateBirth(),
