@@ -1,7 +1,7 @@
 package com.ecommerce.demo.repositories;
 
 import com.ecommerce.demo.model.Person;
-import com.ecommerce.demo.model.User;
+import com.ecommerce.demo.model.CustomUserDetails;
 import com.ecommerce.demo.repositories.interfaces.PersonQueryRepository;
 import io.vavr.control.Try;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +41,12 @@ public class PersonQueryRepositoryImpl implements PersonQueryRepository {
                 jdbcTemplate.queryForObject(sql, Boolean.class, email));
     }
 
-    public Optional<User> findByEmail(String email) {
+    public Optional<CustomUserDetails> findByEmail(String email) {
         String sql = "SELECT id, CONCAT(first_name, ' ', last_name) AS full_name, date_birth, email, password, " +
                 "account_non_expired, credentials_non_expired, account_non_locked, enabled " +
                 "FROM persons WHERE email = ?";
 
-        return Optional.of(jdbcTemplate.queryForObject(sql, User.class, personRowMapper(email)));
+        return Optional.of(jdbcTemplate.queryForObject(sql, CustomUserDetails.class, personRowMapper(email)));
     }
 
     public List<SimpleGrantedAuthority> getAuthorities(String email) {
@@ -61,9 +61,9 @@ public class PersonQueryRepositoryImpl implements PersonQueryRepository {
                 .toList();
     }
 
-    private RowMapper<User> personRowMapper(String email) {
+    private RowMapper<CustomUserDetails> personRowMapper(String email) {
         return ((rs, rowNum) ->
-                new User(
+                new CustomUserDetails(
                         rs.getLong("id"),
                         rs.getString("full_name"),
                         rs.getDate("date_birth"),
