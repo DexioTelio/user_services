@@ -17,12 +17,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-public class JwtFilter extends OncePerRequestFilter {
+public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenServices jwtTokenServices;
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    public JwtFilter(JwtTokenServices jwtTokenServices,
+    public JwtTokenFilter(JwtTokenServices jwtTokenServices,
                      UserDetailsService userDetailsService) {
         this.jwtTokenServices = jwtTokenServices;
         this.userDetailsService = userDetailsService;
@@ -36,13 +36,11 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
-        // Verificar si el encabezado de autorización está presente y comienza con "Bearer "
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             username = jwtTokenServices.extractUserName(token);
         }
 
-        // Si el usuario no está autenticado y el contexto de seguridad es nulo
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if (jwtTokenServices.validateToken(token, userDetails)) {
