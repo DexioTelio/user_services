@@ -22,19 +22,29 @@ public class PersonWriteRepositoryImpl implements PersonWriteRepository {
 
     @Override
     public Try<Long> create(Person person) {
-        String sql = "INSERT INTO persons (first_name, last_name, date_birth, email, password, " +
-                "gender, profile_image_url, last_login, terms_accepted) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?) RETURNING person_id;";
+        logger.info("Insertando persona con los valores: {}, {}, {}, {}, {}, {}, {}, {}",
+                person.getFirstName(),
+                person.getLastName(),
+                person.getDateBirth(),
+                person.getEmail(),
+                person.getPassword(),
+                person.getGender().getValue().toLowerCase(),
+                person.getProfileImageUrl(),
+                person.isTermsAccepted());
+
+        String sql = "INSERT INTO persons (first_name, last_name, date_birth, email, password, gender, profile_image_url, terms_accepted) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
+                "RETURNING person_id;";
 
         // Attempt to insert a new person into the database
         // Execute the query and retrieve the generated user ID
         return Try.of(() -> jdbcTemplate.queryForObject(sql, Long.class,
                 person.getFirstName(),
                 person.getLastName(),
-                person.getDateOfBirth(),
+                person.getDateBirth(),
                 person.getEmail(),
-                person.getGender().getValue().toLowerCase(),
                 person.getPassword(),
+                person.getGender().getValue().toLowerCase(),
                 person.getProfileImageUrl(),
                 person.isTermsAccepted()));
     }
