@@ -37,7 +37,7 @@ public record RegistrationRequest(
         @JsonProperty("profile_image_url") String profileImageUrl,
 
         @NotBlank(message = "Terms acceptance is required")
-        @JsonProperty("terms_accepted") Boolean termsAccepted,
+        @JsonProperty("terms_accepted") boolean termsAccepted,
 
         @NotEmpty(message = "client is required")
         @JsonProperty("client") ClientRequest client,
